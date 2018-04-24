@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <!-- Bootstrap CSS -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="./assets/css/index.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+
+    <title>Travelonesia.com</title>
+  </head>
+  <body>
+    
+    <section id="app">
+        <!-- ===================================================== NAVIGATION BAR ===================================================== -->
+        <navbar :carts="carts"></navbar>
+
+        <!-- ===================================================== SECTION MODAL SHOP CART ======================================================== -->
+        <modalcart
+            :carts="carts"
+            :get-number-format="getNumberFormat"
+            :delete-item="deleteItem"
+            :checkout="checkout"
+            :qtyitemincarts="qtyitemincarts"
+        ></modalcart>
+
+        <!-- ===================================================== SECTION MODAL ADMIN ======================================================== -->
+        <!-- <modaladmin 
+            :add-item-success="add_item_success"
+            :item-name="item_name"
+            :item-price="item_price"
+            :item-qty-stock="item_qty_stock"
+            :item-location="item_location"
+            :submit-item="submitItem"
+        ></modaladmin> -->
+
+        <section id="modal-admin">
+            <div class="modal fade bd-example-modal-lg modal-admin" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title">Admin Input Form</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+        
+                    </div>
+                    <div class="modal-body">
+                        <div class="md-form mb-4">
+                            <div class="add-success">
+                                <h5 class="add-success">{{ add_item_success }}</h5>
+                            </div>
+                        </div>        
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Trip name:</label>
+                            <input type="text" class="form-control" id="" aria-describedby="emailHelp" placeholder="Enter trip name..." v-model="item_name">
+                            <small id="emailHelp" class="form-text text-muted">Psst, make it interesting !</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Trip price:</label>
+                            <input type="text" class="form-control" id="" placeholder="Enter trip price..." v-model="item_price">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleFormControlSelect1">Trip Location:</label>
+                            <select class="form-control" id="exampleFormControlSelect1" v-model="item_location" required>
+                                <option value="Bali">Bali</option>
+                                <option value="Lombok">Lombok</option>
+                                <option value="Padang">Padang</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Trip Seats:</label>
+                            <input type="text" class="form-control" id="" placeholder="Enter number of available trip seats..." v-model="item_qty_stock">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleFormControlFile1">Trip Thumbnail:</label>
+                            <input type="file" class="form-control-file" id="image">
+                        </div>
+                        <button class="btn btn-info col-md-12" @click="submitItem()">Submit</button>            
+                    </div>
+                </div>
+                </div>
+            </div>
+        </section>
+            
+        <!-- =====================================================SECTION CONTENT===================================================== -->
+        <div class="content-page">
+            <div class="content-container col-md-8 offset-md-2">
+                <div class="content-head col-md-12">
+                    <h1 class="heading">BALI</h1>
+                </div>
+                <div class="content-items col-md-12">
+                    <div class="content-items-box" v-for="item in items_Bali">
+                        <div class="content-items-image col-md-12">
+                            <img class="items-image" :src="item.image">
+                        </div>
+                        <div clas="content-items-desc col-md-12">
+                            <div class="items-name col-md-12">
+                                <h3>{{ item.name }}</h3>
+                            </div>
+                            <div class="items-row col-md-12">
+                                <div class="items-price col-md-8">
+                                    <p class="">Rp {{ getNumberFormat(item.price) }} Q: {{ item.qty_stock }}</p>
+                                </div>
+                                <button class="btn btn-info col-md-4" v-on:click="addToCart(item)">Buy</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="content-container col-md-8 offset-md-2">
+                <div class="content-head col-md-12">
+                    <h1 class="heading">LOMBOK</h1>
+                </div>
+                <div class="content-items col-md-12">
+                    <div class="content-items-box" v-for="item in items_Lombok">
+                        <div class="content-items-image col-md-12">
+                            <img class="items-image" :src="item.image">
+                        </div>
+                        <div clas="content-items-desc col-md-12">
+                            <div class="items-name col-md-12">
+                                <h3>{{ item.name }}</h3>
+                            </div>
+                            <div class="items-row col-md-12">
+                                <div class="items-price col-md-8">
+                                    <p class="">Rp {{ getNumberFormat(item.price) }} Q: {{ item.qty_stock }}</p>
+                                </div>
+                                <button class="btn btn-info col-md-4" v-on:click="addToCart(item)">Buy</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="content-container col-md-8 offset-md-2">
+                <div class="content-head col-md-12">
+                    <h1 class="heading">PADANG</h1>
+                </div>
+                <div class="content-items col-md-12">
+                    <div class="content-items-box" v-for="item in items_Padang">
+                        <div class="content-items-image col-md-12">
+                            <img class="items-image" :src="item.image">
+                        </div>
+                        <div clas="content-items-desc col-md-12">
+                            <div class="items-name col-md-12">
+                                <h3>{{ item.name }}</h3>
+                            </div>
+                            <div class="items-row col-md-12">
+                                <div class="items-price col-md-8">
+                                    <p class="">Rp {{ getNumberFormat(item.price) }} Q: {{ item.qty_stock }}</p>
+                                </div>
+                                <button class="btn btn-info col-md-4" v-on:click="addToCart(item)">Buy</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-copyright py-3 text-center">
+            © 2018 Copyright:
+            <a href=""> Travelonesia.com </a>
+        </div>
+
+    </section>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    
+    <script src="./assets/js/com-navbar.js"></script>
+    <script src="./assets/js/com-modal-cart.js"></script>
+    <script src="./assets/js/com-modal-admin.js"></script>
+    <script src="./assets/js/com-item-bali.js"></script>
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                show: true,
+                items_Bali: [],
+                items_Lombok: [],
+                items_Padang: [],
+                carts: [],
+                qty_Items: 0,
+                item_name: '',
+                item_price: '',
+                item_qty_stock: '',
+                item_location: '',
+                item_thumbnail: '',
+                add_item_success: '',
+                test: 'marco'
+            },
+            components: {
+                navbar: navbar,
+                modalcart: modalcart,
+                modaladmin: modaladmin
+            },
+            created: function () {
+                this.getItems();
+            },
+            methods: {
+                getItems: function () {
+                    axios.get('http://ecommerce.madebybastian.com/items')
+                        .then(result => {
+                            // console.log('ini resultnya ya',result);
+                            for (let i = 0; i < result.data.item.length; i++) {
+                                if (result.data.item[i].location == 'Bali') {
+                                    this.items_Bali.push(result.data.item[i]);
+                                } else if (result.data.item[i].location == 'Lombok') {
+                                    this.items_Lombok.push(result.data.item[i]);
+                                } else if (result.data.item[i].location == 'Padang') {
+                                    this.items_Padang.push(result.data.item[i]);
+                                }
+                            }
+                            // console.log(this.items_Bali);
+                        })
+                        .catch(err => {
+                            console.log(err);
+                        })
+                },
+                getNumberFormat: function(number) {
+                    let arrNumber = String(number).split('')
+
+                    let arrResult = []
+
+                    let status_comma = 0
+                    for (let i=arrNumber.length-1; i>=0;i--) {
+                        arrResult.push(arrNumber[i])
+                        if(status_comma % 3 == 2) {
+                            arrResult.push('.')
+                        }
+                        status_comma++
+                    }
+
+                    if(arrResult[arrResult.length-1] == ',') {
+                        arrResult.splice(arrResult.length-1,1)
+                    }
+                    
+                    return arrResult.reverse().join('');
+                },
+                addToCart: function(item) {                    
+                    if (this.carts.length <= 0) {
+                        let qty = 1;
+                        item['qty_buy'] = qty; 
+                        this.carts.push(item);
+                        // console.log('ini dari beli carts < 0',item.qty_buy);
+
+                    } else {
+                        let status = 0;
+                        for (let i = 0; i < this.carts.length; i++) {
+                            if (this.carts[i]._id == item._id) {
+                                status ++;
+                                item.qty_buy++;
+                                // console.log('ini dari beli carts > 0 item',item.qty_buy);
+                                break;
+                            } 
+                        }
+                        if (status <= 0) {
+                            let qty = 1;
+                            item['qty_buy'] = qty; 
+                            this.carts.push(item);
+                            // console.log('ini dari status item baru',item.qty_buy);
+                        }
+                    }
+                    // console.log(this.carts)
+                },
+                submitItem: function () {
+                    let fileInput = document.querySelector('#image');
+                    // console.log(fileInput);
+
+                    var formData = new FormData()
+                    formData.append('name', this.item_name);
+                    formData.append('price', this.item_price);
+                    formData.append('location', this.item_location);
+                    formData.append('qty_stock', this.item_qty_stock);
+                    formData.append('image', fileInput.files[0]);
+
+                    axios.post('http://ecommerce.madebybastian.com/items/save', formData)
+                        .then(result => {
+                            console.log('ini result', result);
+                            if (result.data.item.location == 'Bali') {
+                                this.items_Bali.push(result.data.item);
+                            } else if (result.data.item.location == 'Lombok') {
+                                this.items_Lombok.push(result.data.item);
+                            } else if (result.data.item.location == 'Padang') {
+                                this.items_Padang.push(result.data.item);
+                            }
+                            this.add_item_success = "Succesfully posted your trip !"
+                            $('.add-success').css({'display':'block'});
+                            this.item_name = '';
+                            this.item_price = '';
+                            this.item_location = '';
+                            this.item_qty_stock = '',
+                            $('#image').val('');
+                            setTimeout(function(){
+                                window.location.href = 'index.html';
+                            }, 2000);
+                        })
+                        .catch(err => {
+                            console.log(err);
+                        })
+                },
+                deleteItem: function (item) {
+                    let index = this.carts.indexOf(item._id);
+                    this.carts.splice(index,1);
+                },
+                checkout: function () {
+                    if (this.carts.length <= 0) {
+                        alert('Your cart is empty !')
+                    } else {
+                        alert('You have succesfully checked-out');
+                    }
+                },
+                qtyitemincarts: function (item) {
+                    for (let i = 0; i < this.carts.length; i++) {
+                        if (this.carts[i]._id == item._id) {
+                            return this.carts[i].qty_buy;
+                            break;
+                        }
+                    }
+                }
+            },
+            computed: {
+            }
+        })
+
+    </script>
+
+</body>
+</html>

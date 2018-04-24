@@ -1,0 +1,112 @@
+/* ==============================================NAVBAR CSS============================================== */
+.navbar {
+    background-color: transparent;
+}
+
+.navbar-light {
+    background-color: black;
+}
+
+.bg-light {
+    background-color: black;
+}
+
+/* ==============================================CONTENT CSS============================================== */
+.content-page {
+    margin-top: 4rem;
+}
+
+.content-container {
+    /* border: 1px solid black; */
+    /* height: 70rem; */
+}
+
+.content-head {
+    /* border: 1px solid red; */
+    /* height: 5rem; */
+}
+
+.heading {
+    margin: 10px;
+}
+
+.content-items {
+    /* border: 1px solid blue; */
+    /* height: 20rem; */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.content-items-box {
+    /* border: 1px solid gainsboro; */
+    margin: 10px;
+    /* padding: 10px; */
+    /* width: 23rem; */
+    /* height: 15rem; */
+}
+
+.items-image {
+    height: 175px;
+    width: 335px;
+}
+
+.content-items-desc {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.items-row {
+    display: flex;
+    flex-wrap: wrap;
+    padding-left: 0px;
+    justify-content: space-between;
+}
+
+.items-price {
+    margin: 0px 0px 0px 0px;
+    /* align-self: center; */
+    font-size: 18px;
+}
+
+/* ==============================================SHOP CART CSS============================================== */
+.shop-cart-image {
+    height: 100px;
+    width: 100px;
+}
+
+.row-product {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
+/* ==============================================SHOP CART CSS============================================== */
+.add-success {
+    display: none;
+    color: #155724;
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    border-radius: 5px;
+    text-align: center;
+}
+
+/* ==============================================FOOTER CSS============================================== */
+.site-footer{
+    position: relative;
+    margin:auto;
+    width: auto;
+    top:1.0em;
+    height: 120px;
+    background-size: 100%;
+    background-color: rgba(25, 25, 25, 0.905);
+    opacity: 0.9;
+}
+
+.footer-content{
+    top:2.0em;
+    text-align: center;
+    position: relative;
+    font-size: 1.3rem;
+    color: rgba(255, 255, 255, 0.935);
+}
